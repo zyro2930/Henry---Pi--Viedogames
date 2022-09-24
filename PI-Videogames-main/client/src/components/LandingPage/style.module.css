@@ -1,0 +1,16 @@
+  .component h1{
+    margin-top: 0px;
+    text-align: center;
+    background-color: rgb(23, 23, 23);
+    color:rgb(146, 4, 2);
+  }
+.component button{
+    padding:1rem 1rem;
+    border-radius:20px;
+    border-color: rgb(23, 23, 23);
+    background-color:rgb(146, 4, 2);
+    font-weight:bold;
+    color:rgb(17, 17, 17);;
+    font-size:32px;
+    cursor: pointer;
+}

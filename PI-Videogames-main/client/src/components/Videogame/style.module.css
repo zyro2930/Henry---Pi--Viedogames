@@ -1,0 +1,16 @@
+.component h3{
+    margin-top: 0px;
+    text-align: center;
+    /* background-color: rgb(255, 255, 255); */
+    color:rgb(255, 255, 255);
+  }
+.component p{
+    color:rgb(255, 255, 255);
+    text-align: center;
+}
+.component img{
+    border-radius:10px 10px 0px 0px ;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}

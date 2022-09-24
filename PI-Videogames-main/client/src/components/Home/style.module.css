@@ -1,0 +1,18 @@
+.cards{
+    /* background-color: red; */
+    /* width: 90%; */
+    /* margin: auto; */
+    margin-top: 20px;
+    margin-left: 5%;
+    margin-right: 5%;
+    overflow: hidden;    
+}
+.card{
+    width: 220px;
+    height: 280px;
+    border-radius: 10px;
+    margin: 5px;
+    float: left;
+    background-color: rgb(45,45,48,.9);
+    /* opacity: 0.5; */
+}
