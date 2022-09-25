@@ -1,5 +1,6 @@
 const { Videogame, Genre, Platform } = require('../db.js');
 const axios = require('axios')
+const { Op } = require('sequelize');
 require('dotenv').config();
 const {API_KEY} = process.env;
 
@@ -25,10 +26,25 @@ let getGenres = async () => {
     }
         return genresDb
 }
-let getVideogames = async (name)=>{
-    let newVideogame = {}    
+let getApiVideogames = async (name)=>{
+    let newVideogame = {}
+    let resp = typeof name == 'undefined'? await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}`)
+    :await axios.get(`https://api.rawg.io/api/games?search=${name}&page_size=15&key=${API_KEY}`)
+    let genreApi={}
+    let videoGamesApi = resp.data.results.map(g =>
+        newVideogame={            
+            id:g.id,
+            background_image:g.background_image,
+            name: g.name,
+            rating:g.rating,
+            genres:g.genres.map(g=> genreApi={'id':g.id, 'name':g.name})
+        }
+    )
+    return videoGamesApi
+}
+let getDbVideogames = async(name)=>{
     const condition = name ? { where: {name: { [Op.like]: `%${name}%` },}} : {} 
-    let videoGamesDb = await Videogame.findAll({condition, attributes:['id','background_image','name'],
+    let videoGamesDb = await Videogame.findAll({condition, attributes:['id','background_image','name','rating'],
         include:
                 [
                     {
@@ -40,20 +56,15 @@ let getVideogames = async (name)=>{
                 ]
         
     })
-    let resp = typeof name == 'undefined'? await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}`)
-    :await axios.get(`https://api.rawg.io/api/games?search=${name}&page_size=15&key=${API_KEY}`)
-    let genreApi={}
-    let videoGamesApi = resp.data.results.map(g =>
-        newVideogame={            
-            id:g.id,
-            background_image:g.background_image,
-            name: g.name,            
-            genres:g.genres.map(g=> genreApi={'id':g.id, 'name':g.name})
-        }
-    )
-    allGames=[...videoGamesDb, ...videoGamesApi]
-    allGames.length ? allGames : {msg:'Sin resultados'}
-    return allGames
+    return videoGamesDb
+}
+let getAllVideogames = async (name)=>{
+const videoGamesDb = await getDbVideogames(name)
+const videoGamesApi = await getApiVideogames(name)
+
+allGames=[...videoGamesDb, ...videoGamesApi]
+allGames.length ? allGames : {msg:'Sin resultados'}
+return allGames
 }
 let getVideogameById = async (idParams)=>{
     let newVideogame = {}    
@@ -87,36 +98,41 @@ let getVideogameById = async (idParams)=>{
         return {'error':error.message}
     }  
 }
-function reportErrorPost(body){
-    if (!body.name) return true 
+function reportErrorPost(infoBodyGame){
+    if (!infoBodyGame.name || !infoBodyGame.description || !infoBodyGame.launch || !infoBodyGame.platforms) return true 
     return false
 }
 let postVideogame = async (videoGame)=>{
-    const error = reportErrorPost(videoGame)
-    if (error) return res.status(404).send("Faltan datos obligatorios")
-    const {genres} = req.body
+    const {videogame, genres} = videoGame
+    const error = reportErrorPost(videogame)
+    if (error) return {'error':'Faltan datos obligatorios'}    
     try {
-        const vG = await Videogame.create({...req.body.videogame})
-        if (vG) await vG.addGenres(genres)     
-        return res.send( await Videogame.findByPk(vG.id,
-            {include: [
-                {
-                    model: Genre,
-                    attributes: ['id','name'],
-                    through: {attributes: []}
-                }
-            ]}
-            ))
+        const vG = await Videogame.create({...videogame})
+        if (vG) await vG.addGenres(genres)             
+        console.log(vG.id)
+        return  await Videogame.findByPk(vG.id,
+            {include: 
+                [
+                    {
+                        model: Genre,
+                        as :'genres',
+                        attributes: ['id','name'],
+                        through: {attributes: []}
+                    }
+                 ]
+            }
+         )
     } catch (error) {        
-        res.status(404).send(error.message)
+        return {'error':error.message}
     }  
 }
-
 module.exports={
     getPlatformsForFortnite,
     getGenres,
-    getVideogames,
     getVideogameById,
     reportErrorPost,
-    postVideogame
+    postVideogame,
+    getAllVideogames,
+    getApiVideogames,
+    getDbVideogames
 }

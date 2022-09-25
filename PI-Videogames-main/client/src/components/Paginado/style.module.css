@@ -1,0 +1,27 @@
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+
+}
+.wall{
+    background-color: rgb(159, 17, 19,.7);
+    border-radius: 10px;
+    margin-bottom: 0px;
+}
+.buttons{
+    background-color: rgb(45,45,48);
+    font-weight: bold;
+    font-size:18px;
+    color: goldenrod;
+    border:solid;
+    border-color: rgb(45,45,48);
+    margin: 4px 4px 4px 4px;
+    border-radius: 5px;
+}
+.buttons:hover{
+    border-color: rgb(251, 251, 251);
+    font-weight:bolder;
+    color: white;
+}

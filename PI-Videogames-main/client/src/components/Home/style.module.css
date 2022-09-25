@@ -2,7 +2,7 @@
     /* background-color: red; */
     /* width: 90%; */
     /* margin: auto; */
-    margin-top: 20px;
+    margin-top: 10px;
     margin-left: 5%;
     margin-right: 5%;
     overflow: hidden;    
@@ -15,4 +15,8 @@
     float: left;
     background-color: rgb(45,45,48,.9);
     /* opacity: 0.5; */
+    transition: transform 0.2s;
+}
+.card:hover{
+transform: scale(1.05);
 }
