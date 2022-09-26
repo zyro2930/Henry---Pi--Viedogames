@@ -82,16 +82,18 @@ let getVideogameById = async (idParams)=>{
             })
         }else {
             const resp = await axios.get(`https://api.rawg.io/api/games/${idParams}?key=${API_KEY}`)
-            const {id, name, description, released, rating, rating_top, platforms, genres} = resp.data
+            const {id, name,background_image, description, description_raw, released, rating, rating_top, platforms, genres} = resp.data
             newVideogame={
             id,
             name,
-            description,
+            background_image,
+            description:description_raw,
             released,
             rating: rating + '/' + rating_top,
             platforms: platforms.map(p=> p.platform.name),
             genres:genres.map(g=> g.name)
-            }                      
+            }  
+            //return resp.data//newVideogame                    
         }   
         return newVideogame
     } catch (error) {
@@ -99,15 +101,20 @@ let getVideogameById = async (idParams)=>{
     }  
 }
 function reportErrorPost(infoBodyGame){
-    if (!infoBodyGame.name || !infoBodyGame.description || !infoBodyGame.launch || !infoBodyGame.platforms) return true 
+    if (!infoBodyGame.name || !infoBodyGame.description || !infoBodyGame.launch) return true 
     return false
 }
+
 let postVideogame = async (videoGame)=>{
-    const {videogame, genres} = videoGame
-    const error = reportErrorPost(videogame)
+    const error = reportErrorPost(videoGame)    
     if (error) return {'error':'Faltan datos obligatorios'}    
+
+    let{name, description, launch, rating, platformsArray, genres, background_image}=videoGame
+    let platforms = platformsArray.toString()
     try {
-        const vG = await Videogame.create({...videogame})
+        const vG = await Videogame.create({
+            name,description,launch,rating,background_image,platforms
+        })
         if (vG) await vG.addGenres(genres)             
         console.log(vG.id)
         return  await Videogame.findByPk(vG.id,
@@ -126,6 +133,7 @@ let postVideogame = async (videoGame)=>{
         return {'error':error.message}
     }  
 }
+
 module.exports={
     getPlatformsForFortnite,
     getGenres,

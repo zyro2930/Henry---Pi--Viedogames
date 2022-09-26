@@ -5,7 +5,7 @@ import React from 'react';
 import LandingPage from './components/LandingPage';
 import Home from './components/Home';
 import Form from './components/Form'
-import Details from './components/Details'
+import Detail from './components/Detail'
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Route exact path = {'/'} component ={LandingPage}/>
         <Route path = {'/home'} component ={Home}/>
         <Route path = {'/create'} component ={Form}/>
-        <Route path={'/home/:id'} component = {Details}/>
+        <Route path={'/:id'} component = {Detail}/>
       </Switch>
     </div>
   );

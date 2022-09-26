@@ -7,6 +7,7 @@ import Videogame from "../Videogame";
 import style from'./style.module.css'
 import Paginado from "../Paginado";
 import SearchBar from '../SearchBar';
+import imagenRog from '../../recursos/img/AsusRogXXL.jpg'
 
 export default function Home (){
 
@@ -39,8 +40,7 @@ export default function Home (){
 
     function handleClickHome(e){
         e.preventDefault()
-        dispatch(getVideogames());
-        
+        dispatch(getVideogames());        
     }
 
     function handleFilterCreated(e){
@@ -113,11 +113,12 @@ export default function Home (){
                     {currentGames?.map(el => {
                         return(
                             <div key = {el.id} className={style.card}>
-                                <Link key = {el.id} to={'/details'} >
+                                {/* <Link key = {el.id} to={'/details'} > */}
+                                <Link to ={`/${el.id}`} key = {el.id}>
                                 <Videogame key = {el.id}  
                                     name = {el.name} 
-                                    image = {el.background_image? el.background_image : el.background_image}
-                                    genres={el.genres}/>
+                                    image = {el.background_image? el.background_image :imagenRog}
+                                    genres = {el.genres}/>
                                 </Link>
                             </div>
                         )                       

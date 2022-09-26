@@ -2,13 +2,14 @@ import { GET_ALL_VIDEOGAMES, GET_ALL_GENRES,
         GET_PLATFORMS,GET_GAME_BY_NAME,
         FILTER_BY_CREATION, FILTER_BY_GENRES,
         ORDER_BY_NAME, ORDER_BY_RATING,
-        POST_GAME} from "../actions/action";
+        POST_GAME,GET_VIDEOGAME_BY_ID} from "../actions/action";
 
 const initialState={
     games:[],
     genres:[],
     platforms:[],
     allGamesForFilter:[],
+    detail:[]
 }
 
 export default function rootReducer (state = initialState, action){
@@ -28,6 +29,11 @@ export default function rootReducer (state = initialState, action){
             return {
                 ...state,
                 platforms: action.payload
+            }
+        case GET_VIDEOGAME_BY_ID:
+            return{
+                ...state,
+                detail: action.payload
             }
         case FILTER_BY_CREATION:
             const allGames = state.allGamesForFilter
@@ -87,7 +93,7 @@ export default function rootReducer (state = initialState, action){
             }
         case POST_GAME:
             return {
-                ...state
+                ...state,
             }
         default:return {...state}
     }
