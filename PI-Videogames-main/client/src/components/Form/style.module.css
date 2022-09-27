@@ -1,6 +1,134 @@
-.checkGenres{
-    background-color: brown;
+/* *{box-sizing: border-box;} */
+.create{
+    height: 100%;
+    width:100%;
+    color:white;
+    font-family:sans-serif;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
-.checkPlatforms{
-    background-color:aqua;
+.content {
+    width:70%;
+    margin: 3rem auto;
+    background-color: rgb(21, 21, 21,.9);
+    border-radius: 20px;
+}
+
+.content h1{
+    display: inline;
+    margin-left: 20px;
+    font-size:32px;
+}
+
+.form{
+    margin-top: 2rem;
+    background-color: rgb(42, 42, 42,.9);
+    border-radius: 20px;
+}
+.lblText{
+    font-size:14px;
+    font-weight:bold;
+    display:block;
+    margin-left: 5px;
+    margin-bottom:2px;
+}
+.txt{
+    display:block;
+    border:none;
+    width:95%;
+
+    background-color:transparent;
+    padding:5px;
+    border: 1px solid #495e8d;
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-bottom:1rem;
+    color:white;
+    font-size:12px;
+}
+.allChecks{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.platforms{
+    margin-top: 10px;
+    width: 95%;
+    background-color:rgb(64, 64, 64);
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.platformTitle{
+    font-size: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.platformsChecks{
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(3,1fr);
+}
+
+.genres{
+    margin-top: 10px;
+    width: 95%;
+    background-color:rgb(64, 64, 64);
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+.genreTitle{
+    font-size: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.genresChecks{
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(6,1fr);
+    grid-auto-rows: 1fr;
+}
+
+.BtnHome
+{
+    margin-left:5px;
+    padding:5px;
+    border-radius:25px;
+    background-color:#495e8d;
+    font-weight:bold;
+    color:white;
+    font-size:16px;
+    cursor: pointer;
+}
+
+.BtnGuardar
+{
+    margin-left: 82%;
+    padding:1rem;
+    border-radius:25px;
+    background-color:#7b001b;
+    font-weight:bold;
+    color:white;
+    font-size:16px;
+    cursor: pointer;
+}
+
+.errors{
+    font-family:'Courier New', Courier, monospace;
+    font-style: italic;
+    color: yellow;
+    margin-left: 20px;
 }

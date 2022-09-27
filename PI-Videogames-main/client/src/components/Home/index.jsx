@@ -65,55 +65,60 @@ export default function Home (){
     }
 
     let contador =0
-    return(
-        <div >
-            <button onClick={ e=> {handleClickHome(e)}}>Home</button>
-            <Link to ='/create'><button>Nuevo</button></Link>            
-            <div>
-                <div>
+    return(    
+        <div className={style.component}>
+            <div className={style.NavBar}>
+                <div className={style.buttonAll}>
+                    <Link to =''><button className={style.buttonHome} onClick={ e=> {handleClickHome(e)}}>
+                        Home</button></Link>
+                    <Link to ='/create'><button className={style.buttonNew} >Nuevo</button></Link>
+                </div>
+                <div className={style.containerSearchBar}>
+                    <label>Buscador de Juegos</label>
                     <SearchBar></SearchBar>
                 </div>
-                <div>
+                <div className={style.containerGenres}>
                     <label>Generos</label>
-                    <select onChange={e=>handleFilterGenres(e)}>
+                    <select className={style.cbox} onChange={e=>handleFilterGenres(e)}>
                     <option key = '0' value = 'all'>Todos</option>
                         {allGenres?.map(g => {
                             return (<option key ={g.id} value = {g.name}> {g.name} </option>)
                         })}
                     </select>
                 </div>
-                <div>
+                <div className={style.containerCreated}>
                     <label>Creados</label>
-                    <select onChange = {e => handleFilterCreated(e)}>
+                    <select className={style.cbox} onChange = {e => handleFilterCreated(e)}>
                         <option key = '0' value = 'all'>Todos</option>
                         <option key = '1' value = 'db'>Juegos creados</option>
                         <option key = '2' value = 'api'>Api</option>
                     </select>
                 </div>
-                <div>
+                <div className={style.containerRating}>
                     <label>Rating</label>
-                    <select onChange = {e => handleOrderByRating(e)}>
+                    <select className={style.cbox} onChange = {e => handleOrderByRating(e)}>
                         <option key = '0' value = 'max'>Rating alto</option>
                         <option key = '1' value = 'min'>Rating bajo</option>
                     </select>
                 </div>
-                <div>
+                <div className={style.containerAlphabetic}>
                     <label>Alfabeticamente</label>
-                    <select onChange = {e=> handleOrderByName(e)}>                    
+                    <select className={style.cbox} onChange = {e=> handleOrderByName(e)}>                    
                         <option key = '0' value = 'az'>A/Z</option>
                         <option key = '1' value = 'za'>Z/A</option>
                     </select>
                 </div>
-                <Paginado key= {contador++}
-                gamesPerPage = {gamesPerPage} 
-                allGames = {allGames.length} 
-                paginado = {paginado}
-                />
+            </div>
+            <Paginado key= {contador++}
+            gamesPerPage = {gamesPerPage} 
+            allGames = {allGames.length} 
+            paginado = {paginado}
+            />
+            <div className={style.containerCards} >
                 <div className={style.cards}>
                     {currentGames?.map(el => {
                         return(
                             <div key = {el.id} className={style.card}>
-                                {/* <Link key = {el.id} to={'/details'} > */}
                                 <Link to ={`/${el.id}`} key = {el.id}>
                                 <Videogame key = {el.id}  
                                     name = {el.name} 
@@ -124,12 +129,13 @@ export default function Home (){
                         )                       
                     })}
                 </div>
-                <Paginado 
-                gamesPerPage = {gamesPerPage} 
-                allGames = {allGames.length} 
-                paginado = {paginado}
-                />
             </div>
+            <Paginado 
+            gamesPerPage = {gamesPerPage} 
+            allGames = {allGames.length} 
+            paginado = {paginado}
+            />
         </div>
+
     )
 }

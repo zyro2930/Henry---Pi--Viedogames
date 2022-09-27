@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { getVideogamesByName } from "../../actions/action";
+import style from './style.module.css'
 
 export default function SearchBar(){
     const dispatch = useDispatch()
@@ -23,10 +24,12 @@ export default function SearchBar(){
         }        
     }
     return(
-    <div>
-        <input type={'text'} placeholder ='buscar...' onChange={e=> handleInputChange(e)}
-        onKeyDown ={e=>handleSubmitEnter(e)}></input>
-        <button type='submit' onClick={e=>handleSubmit(e)}>Buscar</button>
+    <div className={style.component}>
+        <input className={style.txt} type={'text'} placeholder ='buscar...' 
+            onChange={e=> handleInputChange(e)}
+            onKeyDown ={e=>handleSubmitEnter(e)}>            
+        </input>
+        {/* <button type='submit' onClick={e=>handleSubmit(e)}>Buscar</button> */}
     </div>
     )
 }

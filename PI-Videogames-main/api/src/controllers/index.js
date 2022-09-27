@@ -15,17 +15,19 @@ let getPlatformsForFortnite = async ()=>{
     }    
     return platformsDb
 }
+
 let getGenres = async () => {
     let genresDb = await Genre.findAll()
     if (!genresDb.length){
         let genre={}
-        let resp = await axios.get(`https://api.rawg.io/api/genres?key=${API_KEY}`)
-        let genres = resp.data.results.map( g => genre = {name:g.name})
-        genres.forEach(g=> Genre.create(g))
+        let {data} = await axios.get(`https://api.rawg.io/api/genres?key=${API_KEY}`)
+        let genres = data.results.map( g => genre = {name:g.name})   
+        genres.forEach(g=> Genre.create(g))     
         return genres
     }
-        return genresDb
+    return genresDb
 }
+
 let getApiVideogames = async (name)=>{
     let newVideogame = {}
     let resp = typeof name == 'undefined'? await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}`)
@@ -75,6 +77,7 @@ let getVideogameById = async (idParams)=>{
                     [
                         {
                             model: Genre,
+                            as :'genres',
                             attributes:['id','name'],
                             through:{attributes:[]}
                         }

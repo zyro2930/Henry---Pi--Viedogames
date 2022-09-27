@@ -21,7 +21,40 @@ function validate(input){
     }
     return errors
 }
+function validarFecha(fecha){
+    if(validarFormatoFecha(fecha)){
+        if(!existeFecha(fecha)){
+            //alert("La fecha introducida no existe.");}
+            return false
+        }
+    }else{
+            //alert("El formato de la fecha es incorrecto." + input.launch);
+            return false
+    }  
+    return true
+}
 
+function validarFormatoFecha(campo) {
+    //esta expresion regular valida la fecha en esp y con barras
+    //var RegExPattern = /^\d{1,2}\/\d{1,2}\/\d{2,4}$/;
+    var RegExPattern = /^\d{2,4}\-\d{1,2}\-\d{1,2}$/;
+    if ((campo.match(RegExPattern)) && (campo!='')) {
+          return true;
+    } else {
+          return false;
+    }
+}
+function existeFecha(fecha){
+    var fechaf = fecha.split("/");
+    var day = fechaf[2];
+    var month = fechaf[1];
+    var year = fechaf[1];
+    var date = new Date(year,month,'0');
+    if((day-0)>(date.getDate()-0)){
+          return false;
+    }
+    return true;
+}
 export default function PostVideogame (){
     let dispatch = useDispatch()
     const history = useHistory()
@@ -57,12 +90,15 @@ export default function PostVideogame (){
 
      function handleSubmit(e){
         e.preventDefault()
+
         if (!input.name){
             alert('Debe cargar el nombre de un videojuego.')
         }else if (!input.description){
             alert('Debe cargar la descripcion del videojuego.')
         }else if(!input.launch){
             alert('debe colocar la fecha de lanzamiento')
+        }else if(!validarFecha(input.launch)){
+            alert ('Fecha invalida')
         }else if (!input.rating){
             alert('El videojuego debe tener un rating inicial.')
         }else if (input.rating>5){
@@ -71,10 +107,9 @@ export default function PostVideogame (){
             alert( 'Debe seleccionar al menos una plataformaaaa.',input.platformsArray.length)
         }else if (!input.genres.length){
             alert( 'Debe seleccionar al menos un genero.')
-        }else{       
-            console.log(input)
+        }else{  
             dispatch(postVideogame(input))
-            alert('Videojuego creado.')
+             alert('Videojuego creado.')
             setInput({
                 name:'',
                 description: '',
@@ -117,67 +152,80 @@ export default function PostVideogame (){
      }
 
     return(
-        <div>
-                <Link to={'/home'}><button>Home</button></Link>
-                <h1>Crea tu videojuego</h1>
-                <form onSubmit={e=> handleSubmit(e)}>
+        <div className={style.create}>
+            <div className={style.content}>
+                <div className={style.encabezado}>
+                <Link to={'/home'}><button className={style.BtnHome}>Inicio</button></Link>
+                <h1>Crea tu videojuego...</h1>
+                </div>
+                <form className = {style.form} onSubmit={e=> handleSubmit(e)}>
                     <div>
-                        <label>Nombre: </label>
-                        <input type={'text'} name={'name'} value={input.name} onChange={e=>handleChange(e)}/>
+                        <label htmlFor='name' className= {style.lblText} >Nombre: </label>
+                        <input id='name'  className= {style.txt}  type={'text'} name={'name'} value={input.name} onChange={e=>handleChange(e)}/>
                         {errors.name && (
-                            <p className={''}>{errors.name}</p>
+                            <p className = {style.errors}>{errors.name}</p>
                         )}
                     </div>
                     <div>
-                        <label>Descripcion: </label>
-                        <input type={'text'} name={'description'} value={input.description} onChange={e=>handleChange(e)}/>
+                        <label htmlFor='description' className= {style.lblText} >Descripcion: </label>
+                        <input id='description' className= {style.txt} type={'text'} name={'description'} value={input.description} onChange={e=>handleChange(e)}/>
                         {errors.description && (
-                            <p className={''}>{errors.description}</p>
+                            <p className = {style.errors}>{errors.description}</p>
                         )}
                     </div>
                     <div>
-                        <label>Lanzamiento: </label>
-                        <input type={'date'} name={'launch'} value={input.launch} onChange={e=>handleChange(e)}/>
+                        <label htmlFor = 'lauch' className= {style.lblText} >Lanzamiento: </label>
+                        <input id='lauch' className= {style.txt} type={'date'} name={'launch'} value={input.launch} onChange={e=>handleChange(e)}/>
                         {errors.launch && (
-                            <p className={''}>{errors.launch}</p>
+                            <p className = {style.errors}>{errors.launch}</p>
                         )}
                     </div>
                     <div>
-                        <label>Rating: </label>
-                        <input type={'number'} name={'rating'} value={input.rating}  onChange={e=>handleChange(e)}/>
+                        <label htmlFor ='rating' className= {style.lblText} >Rating: (del 1 al 5) </label>
+                        <input id='rating' className= {style.txt} type={'number'} name={'rating'} value={input.rating}  onChange={e=>handleChange(e)}/>
                         {errors.rating && (
-                            <p className={''}>{errors.rating}</p>
+                            <p className = {style.errors}>{errors.rating}</p>
                         )}
                     </div>
-                    <div  className = {style.checkPlatforms}>
-                        <label>Plataformas: </label>
-                        {
-                            platforms.map( p=>(
-                                <label key={p.id}>
-                                    <input type={'checkbox'} key={p.id} name={p.name} 
-                                    value={p.name} onClick={e=>handleCheckPlatforms(e)}/>{p.name}
-                                </label>
-                            ))
-                        }
-                    </div>
-                    <div className = {style.checkGenres}>
-                        <label>Generos: </label>
-                        {
-                            genres.map( g=>(
-                                <label key={g.id}>
-                                    <input type={'checkbox'} key={g.id} name={g.name} 
-                                    value={g.id} onClick={e=>handleCheckGenres(e)}/>{g.name}
-                                </label>
-                            ))
-                        }                        
+                    <div className={style.allChecks}>
+                        <div className = {style.platforms}>
+                            <label  className={style.platformTitle} >Plataformas: </label>
+                            <div className={style.platformsChecks}>
+                                {
+                                    platforms.map( p=>(
+                                        <label className={style.platformLbl} key={p.id}>
+                                            <input className={style.platformCheck} type={'checkbox'} 
+                                            key={p.id} name={p.name} 
+                                            value={p.name} onClick={e=>handleCheckPlatforms(e)}/>{p.name}
+                                        </label>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                        <div className = {style.genres}>
+                            <label className={style.genreTitle}>Generos:</label>
+                            <div className={style.genresChecks}>
+                                {
+                                    genres.map( g=>(
+                                        <label className={style.genreLbl} key={g.id}>
+                                            <input className={style.genreCheck} type={'checkbox'} 
+                                            key={g.id} name={g.name} 
+                                            value={g.id} onClick={e=>handleCheckGenres(e)}/>{g.name}
+                                        </label>
+                                    ))
+                                }    
+                            </div>                    
+                        </div>
                     </div>
                     <div>
-                        <label>Imagen: </label>
-                        <input type={'text'} name={'background_image'} value ={input.background_image} 
+                        <label htmlFor ='imagen' className= {style.lblText} >Imagen:(no obligatorio) </label>
+                        <input id ='imagen' className= {style.txt} type={'text'} 
+                        name={'background_image'} value ={input.background_image} 
                         onChange={e=>handleChange(e)}/>
                     </div>
-                    <button type="submit">Guardar</button>
+                    <button className={style.BtnGuardar} type="submit">Guardar</button>
                 </form>
+            </div>
         </div>
     )
 }

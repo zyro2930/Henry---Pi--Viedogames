@@ -1,11 +1,13 @@
+.containerCards{ 
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
 .cards{
-    /* background-color: red; */
-    /* width: 90%; */
-    /* margin: auto; */
-    margin-top: 10px;
-    margin-left: 5%;
-    margin-right: 5%;
-    overflow: hidden;    
+    /* overflow: hidden; */
+    margin-left: 2%;
+    width: 90%;
 }
 .card{
     width: 220px;
@@ -14,9 +16,110 @@
     margin: 5px;
     float: left;
     background-color: rgb(45,45,48,.9);
-    /* opacity: 0.5; */
     transition: transform 0.2s;
 }
 .card:hover{
 transform: scale(1.05);
+}
+
+/* NAV BAR ALL */
+.NavBar{
+    background-color: rgb(45,45,48,.9);
+    padding-bottom: 20px;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+
+}
+.NavBar label{
+    display:block;
+    margin-left: 5px;
+}
+
+/* BOTONES */
+.buttonAll{
+    margin-right: 10px;
+    margin-top: 25px;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;    
+}
+.buttonNew{
+    margin-left: 10px;    
+    cursor: pointer;
+    font-size: 20px;
+    color: aliceblue;
+    border: transparent;
+    background-color: transparent;
+}
+
+.buttonNew:hover{
+    color: yellow;
+    font-size: 22px;
+}
+
+
+.buttonHome{    
+    cursor: pointer;
+    font-size: 20px;
+    color: aliceblue;
+    border: transparent;
+    background-color: transparent;
+}
+
+.buttonHome:hover{
+    color: yellow;
+    font-size: 22px;
+}
+
+.containerSearchBar{
+    float: left;
+    margin-right: 10px;
+    margin-top: 20px;
+}
+
+.containerGenres{
+    float: left;
+    margin-right: 10px;
+    margin-top: 20px;
+    /* background-color: blue; */
+}
+
+.containerCreated{
+    float: left;
+    margin-right: 10px;
+    margin-top: 20px;
+}
+
+.containerRating{
+    float: left;
+    margin-right: 10px;
+    margin-top: 20px;
+}
+
+.containerAlphabetic{
+    float: left;
+    margin-right: 10px;
+    margin-top: 20px;
+}
+.cbox{
+    display:block;
+    border:none;
+    width:95%;
+
+    background-color:rgb(255, 255, 255,.7);
+    padding:5px;
+    border: 1px solid #495e8d;
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-bottom:1rem;
+    font-size:12px;
+
 }

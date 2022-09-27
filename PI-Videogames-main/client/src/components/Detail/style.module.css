@@ -1,0 +1,56 @@
+.contenedor{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.todo{
+    margin-top: 50px;
+    background-color:  rgb(21, 21, 21,.9);;
+    overflow: hidden;
+    width: 70%;
+    border-radius: 20px;
+}
+
+.imgContainer{
+    margin-left: 20px;
+    margin-top: 25px;    
+    margin-right: 20px;
+    float: left;
+}
+
+.imgGame{
+    border-radius: 20px;
+}
+
+.data{
+    overflow: hidden;
+}
+.BtnHome{
+    margin-left: 20px;
+    margin-top: 8px;
+    padding:5px;
+    border-radius:25px;
+    background-color:#495e8d;
+    font-weight:bold;
+    color:white;
+    font-size:16px;
+    cursor: pointer;
+
+   float: left;
+}
+
+.title{    
+    display: inline;
+    color: goldenrod;
+    margin-left: 150px;
+}
+.description{
+  margin: 20px;
+}
+
+.footer{
+    margin: 20px;
+}

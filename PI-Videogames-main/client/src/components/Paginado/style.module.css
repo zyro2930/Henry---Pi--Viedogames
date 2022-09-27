@@ -19,6 +19,7 @@
     border-color: rgb(45,45,48);
     margin: 4px 4px 4px 4px;
     border-radius: 5px;
+    cursor: pointer;
 }
 .buttons:hover{
     border-color: rgb(251, 251, 251);
