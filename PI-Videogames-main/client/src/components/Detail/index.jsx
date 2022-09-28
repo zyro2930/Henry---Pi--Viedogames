@@ -10,7 +10,7 @@ export default function Detail (props){
     const dispatch = useDispatch()
     useEffect(()=>{
         dispatch(getVideogameById(props.match.params.id))
-    },[dispatch])
+    },[])
 
     const videogameDetails = useSelector(state=>state.detail)
     return(

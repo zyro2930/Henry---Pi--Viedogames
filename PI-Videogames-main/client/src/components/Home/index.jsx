@@ -17,10 +17,10 @@ export default function Home (){
     const dispatch = useDispatch()
     const allGames = useSelector((state) => state.games)//traigo del reducer el stado games
     const allGenres = useSelector((state) => state.genres)
-    const [orden, setOrden] = useState('')
+    const [orden, setOrden] = useState('Ordenamiento: ninguno')
 
     const [currentPage, setCurrentPage] = useState(1)
-    const [gamesPerPage, setGamesPerPage] = useState(15)
+    const [gamesPerPage, setGamesPerPage] = useState(0)
     const indexOfLastGame = currentPage * gamesPerPage// 1*15=15
     const indexOfFirstGame = indexOfLastGame - gamesPerPage//15-15=0
     const currentGames = allGames.slice(indexOfFirstGame,indexOfLastGame)
@@ -34,6 +34,7 @@ export default function Home (){
     }
 
     useEffect(()=>{
+        setGamesPerPage(15) 
         dispatch(getVideogames());
         dispatch(getGenres());
     },[dispatch])
@@ -55,13 +56,13 @@ export default function Home (){
         e.preventDefault()
         dispatch(orderByName(e.target.value))
         setCurrentPage(1)
-        setOrden(`Ordenado ${e.target.value}`)
+        setOrden(`Ordenamiento: ${e.target.value}`)
     }
     function handleOrderByRating(e){
         e.preventDefault()
         dispatch(orderByRating(e.target.value))
         setCurrentPage(1)
-        setOrden(`Ordenado ${e.target.value}`)
+        setOrden(`Ordenamiento: ${e.target.value}`)
     }
 
     let contador =0
@@ -102,7 +103,7 @@ export default function Home (){
                     </select>
                 </div>
                 <div className={style.containerAlphabetic}>
-                    <label>Alfabeticamente</label>
+                    <label>{orden}</label>
                     <select className={style.cbox} onChange = {e=> handleOrderByName(e)}>                    
                         <option key = '0' value = 'az'>A/Z</option>
                         <option key = '1' value = 'za'>Z/A</option>

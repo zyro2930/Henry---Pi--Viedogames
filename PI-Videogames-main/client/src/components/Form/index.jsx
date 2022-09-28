@@ -37,8 +37,8 @@ function validarFecha(fecha){
 function validarFormatoFecha(campo) {
     //esta expresion regular valida la fecha en esp y con barras
     //var RegExPattern = /^\d{1,2}\/\d{1,2}\/\d{2,4}$/;
-    var RegExPattern = /^\d{2,4}\-\d{1,2}\-\d{1,2}$/;
-    if ((campo.match(RegExPattern)) && (campo!='')) {
+    var RegExPattern = /^\d{2,4}-\d{1,2}-\d{1,2}$/;
+    if ((campo.match(RegExPattern)) && (campo!=='')) {
           return true;
     } else {
           return false;

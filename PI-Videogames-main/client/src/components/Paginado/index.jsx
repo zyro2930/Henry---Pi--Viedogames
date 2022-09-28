@@ -6,9 +6,9 @@ export default function Paginado({gamesPerPage,allGames,paginado}){
     for(let i = 1; i <= Math.ceil(allGames/gamesPerPage); i++)
     pageNumber.push(i)
     return(
-        <nav>
-            <div className = {style.container}>
-                <div className = {style.wall}>
+        <nav key={1}>
+            <div key={2} className = {style.container}>
+                <div key={2} className = {style.wall}>
                     {pageNumber && pageNumber.map(n => (
                         <button  className = {style.buttons} key={n} onClick={()=> paginado(n)}>{n} </button>
                     ))}

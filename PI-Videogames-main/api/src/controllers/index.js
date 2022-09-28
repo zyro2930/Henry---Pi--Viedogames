@@ -1,6 +1,7 @@
 const { Videogame, Genre, Platform } = require('../db.js');
 const axios = require('axios')
 const { Op } = require('sequelize');
+const { config } = require('dotenv');
 require('dotenv').config();
 const {API_KEY} = process.env;
 
@@ -28,22 +29,78 @@ let getGenres = async () => {
     return genresDb
 }
 
-let getApiVideogames = async (name)=>{
-    let newVideogame = {}
-    let resp = typeof name == 'undefined'? await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}`)
-    :await axios.get(`https://api.rawg.io/api/games?search=${name}&page_size=15&key=${API_KEY}`)
+let cargarGames = (resp)=>{
+    let videoGamesApi=[]    
     let genreApi={}
-    let videoGamesApi = resp.data.results.map(g =>
-        newVideogame={            
+    resp.data.results.forEach(g =>{
+        videoGamesApi.push({            
             id:g.id,
             background_image:g.background_image,
             name: g.name,
             rating:g.rating,
             genres:g.genres.map(g=> genreApi={'id':g.id, 'name':g.name})
-        }
-    )
+        })
+    })   
     return videoGamesApi
 }
+
+let getApiVideogames = async (name)=>{
+    let videoGamesApi = []  
+    let genreApi={}
+    if (typeof name === 'undefined'){
+        let URL=`https://api.rawg.io/api/games?key=${API_KEY}&page_size=40`
+        for (let i=1; i<=3 ;i++){
+            if(i===3){
+                URL = URL.replace('&page_size=40','&page_size=20')
+            }
+            let resp = await axios.get(URL,config)    
+            //videoGamesApi = [...videoGamesApi, cargarGames(resp)] 
+            resp.data.results.forEach(g =>{
+                videoGamesApi.push({            
+                    id:g.id,
+                    background_image:g.background_image,
+                    name: g.name,
+                    rating:g.rating,
+                    genres:g.genres.map(g=> genreApi={'id':g.id, 'name':g.name})
+                })
+            })   
+            console.log(i)     
+            URL = resp.data.next
+        }                
+    }else{
+        resp = await axios.get(`https://api.rawg.io/api/games?search=${name}&page_size=15&key=${API_KEY}`)
+        //videoGamesApi = cargarGames(resp)
+        resp.data.results.forEach(g =>{
+            videoGamesApi.push({            
+                id:g.id,
+                background_image:g.background_image,
+                name: g.name,
+                rating:g.rating,
+                genres:g.genres.map(g=> genreApi={'id':g.id, 'name':g.name})
+            })
+        }) 
+    }
+    return videoGamesApi
+
+
+}
+
+// let getApiVideogames = async (name)=>{
+//     let newVideogame = {}
+//     let {data} = typeof name == 'undefined'? await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}&page_size=40`)
+//     :await axios.get(`https://api.rawg.io/api/games?search=${name}&page_size=15&key=${API_KEY}`)
+//     let genreApi={}
+//     let videoGamesApi = data.results.map(g =>
+//         newVideogame={            
+//             id:g.id,
+//             background_image:g.background_image,
+//             name: g.name,
+//             rating:g.rating,
+//             genres:g.genres.map(g=> genreApi={'id':g.id, 'name':g.name})
+//         }
+//     )
+//     return videoGamesApi
+// }
 let getDbVideogames = async(name)=>{
     const condition = name ? { where: {name: { [Op.like]: `%${name}%` },}} : {} 
     let videoGamesDb = await Videogame.findAll({condition, attributes:['id','background_image','name','rating'],
