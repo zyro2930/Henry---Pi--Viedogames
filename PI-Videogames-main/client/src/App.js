@@ -16,8 +16,8 @@ function App() {
   const dispatch = useDispatch()
 
   useEffect(()=>{
-    dispatch(getVideogames());
     dispatch(getGenres());
+    dispatch(getVideogames());    
   },[dispatch])
 
   return (

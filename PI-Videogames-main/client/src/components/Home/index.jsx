@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import { filterGameByCreation,getVideogames,
          filterByGenres, orderByName, orderByRating,
@@ -9,7 +9,7 @@ import style from'./style.module.css'
 import Paginado from "../Paginado";
 import SearchBar from '../SearchBar';
 import imagenRog from '../../recursos/img/AsusRogXXL.jpg'
-import imagenLoading from '../../recursos/img/loading.gif'
+import Loading from '../Loading';
 
 export default function Home (){
     const dispatch = useDispatch()
@@ -17,12 +17,21 @@ export default function Home (){
     const allGenres = useSelector((state) => state.genres)
     const globalPage = useSelector((state) => state.page)
     const [orden, setOrden] = useState('Ordenamiento: ninguno')
+    const [mensaje,setMensaje] = useState('Cargando datos')
 
     const [currentPage, setCurrentPage] = useState(globalPage)
     const [gamesPerPage, setGamesPerPage] = useState(15)
     const indexOfLastGame = currentPage * gamesPerPage// 1*15=15   2*15=30
     const indexOfFirstGame = indexOfLastGame - gamesPerPage//15-15=0   30-15=15
     const currentGames = allGames.slice(indexOfFirstGame,indexOfLastGame) //0-15   15-30
+
+    useEffect(()=>{
+        if(!allGames.length) setMensaje('Sin resultados')
+    })
+
+    useEffect(()=>{
+        setMensaje('Cargando datos')    
+    },[])
 
     function handleUpdatePage (pageNumber){
         setCurrentPage(pageNumber)
@@ -110,7 +119,6 @@ export default function Home (){
             prev = {handleUpdatePagePrev}
             next = {handleUpdatePageNext}
             />
-
             <div className={style.containerCards} >
                 <div className={style.cards}>
                     { currentGames.length ?
@@ -127,8 +135,10 @@ export default function Home (){
                             </div>
                         )                       
                     }) : <div>
-                        <h1>Cargando datos, espere porfavor...</h1>
-                            <img src = {imagenLoading} alt = 'loading'/>
+                        <h1></h1>
+                        {
+                            mensaje ==='Cargando datos'? <Loading/>: <h1>{mensaje}</h1>
+                        }
                         </div>
                     }
                 </div>

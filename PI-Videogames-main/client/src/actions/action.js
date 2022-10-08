@@ -25,7 +25,6 @@ export function clearDetail(){
 
 export function getVideogameById(idParams){
     return async function(dispatch){
-        //let {data} = await axios.get(`http://localhost:3001/${idParams}`)
         let {data} = await axios.get(`${URL_GET_VIDEOGAME_BY_ID}/${idParams}`)
         return dispatch({
             type:GET_VIDEOGAME_BY_ID,
@@ -36,7 +35,6 @@ export function getVideogameById(idParams){
 
 export function getVideogames(){
     return async function(dispatch){
-        //let {data} = await axios.get('http://localhost:3001/all');
         let {data} = await axios.get(URL_GET_VIDEOGAMES);
         return dispatch({
             type: GET_ALL_VIDEOGAMES,
@@ -47,7 +45,6 @@ export function getVideogames(){
 
 export function getGenres(){
     return async function (dispatch){
-        //let {data} = await axios.get('http://localhost:3001/games/genres');
         let {data} = await axios.get(URL_GET_GENRES)
         return dispatch({
             type: GET_ALL_GENRES,
@@ -69,7 +66,6 @@ export function getPlatforms(){
 export function getVideogamesByName(name){
     return async function (dispatch){
         try {
-            //let {data} = await axios.get(`http://localhost:3001/gamesByName?name=${name}`)
             let {data} = await axios.get(URL_GET_VIDEOGAME_BY_NAME+name)
             return dispatch({
                 type:GET_GAME_BY_NAME,
@@ -92,7 +88,6 @@ export function filterByGenres (payload){
         payload
     }
 }
-
 export function orderByName (payload){
     return{
         type: ORDER_BY_NAME,
@@ -107,13 +102,11 @@ export function orderByRating (payload){
 }
 export function postVideogame (payload){
     return async function(dispatch){
-        //let {data}= await axios.post('http://localhost:3001/',payload)
         let {data}= await axios.post(`${URL_POST_VIDEOGAME}/`,payload)
         console.log(data)
         return data
     }
 }
-
 export function updatePage(payload){
     return{
         type: UPDATE_PAGE,

@@ -35,12 +35,8 @@ export default function Detail (props){
                 <p className={style.description}>{videogameDetails.description}</p>
                 <br/>
                 <div className={style.footer}>                
-                <h4>{videogameDetails.platforms + ' '}</h4>
-                    {
-                        videogameDetails.genres?.map(element=>{
-                            return (element.name + ', ')
-                        })
-                    }               
+                <h4>{videogameDetails.platforms?.replaceAll(',',', ') + '.'}</h4>
+                <h4>{videogameDetails.genres?.map(g => ' ' + g.name).toString() + '.'.trim()}</h4>
                 <h4>Rating: {videogameDetails.rating}</h4>
                 </div>
             </div>
