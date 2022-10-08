@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { getVideogamesByName } from "../../actions/action";
 import style from './style.module.css'
@@ -16,6 +16,7 @@ export default function SearchBar(){
     //     e.preventDefault()
     //     dispatch(getVideogamesByName(name))
     // }
+
     function handleSubmitEnter(e){   
         if (e.keyCode ===13)     {
             e.preventDefault()

@@ -8,112 +8,65 @@ const {API_KEY} = process.env;
 let getPlatformsForFortnite = async ()=>{
     let platformsDb = await Platform.findAll()
     if ( !platformsDb.length) {
-        let platform={}
-        let resp = await axios.get(`https://api.rawg.io/api/games/47137?key=${API_KEY}`)
-        let platforms = resp.data.platforms.map(p => platform = {name:p.platform.name})
-        platforms.forEach(p=>Platform.create(p))
-        return platforms
-    }    
+        let {data} = await axios.get(`https://api.rawg.io/api/games/47137?key=${API_KEY}`)
+        let platformsApi = data.platforms.map(p=>Platform.create({name:p.platform.name}))
+        platformsDb = [...platformsDb,...platformsApi]
+    }
     return platformsDb
 }
-
 let getGenres = async () => {
     let genresDb = await Genre.findAll()
     if (!genresDb.length){
-        let genre={}
         let {data} = await axios.get(`https://api.rawg.io/api/genres?key=${API_KEY}`)
-        let genres = data.results.map( g => genre = {name:g.name})   
-        genres.forEach(g=> Genre.create(g))     
-        return genres
+        let genresApi = data.results.map(g=>Genre.create({name:g.name}))
+        genresDb=[...genresDb,...genresApi]
     }
     return genresDb
 }
-
 let cargarGames = (resp)=>{
-    let videoGamesApi=[]    
-    let genreApi={}
-    resp.data.results.forEach(g =>{
-        videoGamesApi.push({            
+    let videoGamesApi = resp.data.results.map(g =>{
+        return{
             id:g.id,
             background_image:g.background_image,
             name: g.name,
             rating:g.rating,
-            genres:g.genres.map(g=> genreApi={'id':g.id, 'name':g.name})
-        })
-    })   
+            genres:g.genres.map(g=> {
+                return {'id':g.id, 'name':g.name}
+            })
+        }})        
     return videoGamesApi
 }
-
 let getApiVideogames = async (name)=>{
-    let videoGamesApi = []  
-    let genreApi={}
+    let videoGamesApi = []
     if (typeof name === 'undefined'){
         let URL=`https://api.rawg.io/api/games?key=${API_KEY}&page_size=40`
         for (let i=1; i<=3 ;i++){
-            if(i===3){
-                URL = URL.replace('&page_size=40','&page_size=20')
-            }
-            let resp = await axios.get(URL,config)    
-            //videoGamesApi = [...videoGamesApi, cargarGames(resp)] 
-            resp.data.results.forEach(g =>{
-                videoGamesApi.push({            
-                    id:g.id,
-                    background_image:g.background_image,
-                    name: g.name,
-                    rating:g.rating,
-                    genres:g.genres.map(g=> genreApi={'id':g.id, 'name':g.name})
-                })
-            })   
-            console.log(i)     
+            let resp = await axios.get(URL,config)
+            videoGamesApi = [...videoGamesApi, ...cargarGames(resp)]
+            console.log(i)
             URL = resp.data.next
-        }                
+        }
     }else{
-        resp = await axios.get(`https://api.rawg.io/api/games?search=${name}&page_size=15&key=${API_KEY}`)
-        //videoGamesApi = cargarGames(resp)
-        resp.data.results.forEach(g =>{
-            videoGamesApi.push({            
-                id:g.id,
-                background_image:g.background_image,
-                name: g.name,
-                rating:g.rating,
-                genres:g.genres.map(g=> genreApi={'id':g.id, 'name':g.name})
-            })
-        }) 
+        let URL=`https://api.rawg.io/api/games?search=${name}&page_size=15&key=${API_KEY}`
+        resp = await axios.get(URL)
+        videoGamesApi = cargarGames(resp)
     }
     return videoGamesApi
-
-
 }
-
-// let getApiVideogames = async (name)=>{
-//     let newVideogame = {}
-//     let {data} = typeof name == 'undefined'? await axios.get(`https://api.rawg.io/api/games?key=${API_KEY}&page_size=40`)
-//     :await axios.get(`https://api.rawg.io/api/games?search=${name}&page_size=15&key=${API_KEY}`)
-//     let genreApi={}
-//     let videoGamesApi = data.results.map(g =>
-//         newVideogame={            
-//             id:g.id,
-//             background_image:g.background_image,
-//             name: g.name,
-//             rating:g.rating,
-//             genres:g.genres.map(g=> genreApi={'id':g.id, 'name':g.name})
-//         }
-//     )
-//     return videoGamesApi
-// }
 let getDbVideogames = async(name)=>{
-    const condition = name ? { where: {name: { [Op.like]: `%${name}%` },}} : {} 
-    let videoGamesDb = await Videogame.findAll({condition, attributes:['id','background_image','name','rating'],
+    const condition = name ? { where: {name: { [Op.like]: `%${name}%` },}} : {}
+    let videoGamesDb = await Videogame.findAll({condition, attributes:
+        ['id','background_image','name','rating'],
         include:
                 [
                     {
-                        model: Genre, 
+                        model: Genre,
                         as :'genres',
                         attributes:['id','name'],
                         through:{attributes:[]}
                     }
                 ]
-        
+
     })
     return videoGamesDb
 }
@@ -126,7 +79,8 @@ allGames.length ? allGames : {msg:'Sin resultados'}
 return allGames
 }
 let getVideogameById = async (idParams)=>{
-    let newVideogame = {}    
+    let newVideogame = {}
+    genresArray=[]
     try {
         if (idParams.includes('-') ) {
             newVideogame = await Videogame.findByPk(idParams,
@@ -141,8 +95,9 @@ let getVideogameById = async (idParams)=>{
                     ]
             })
         }else {
+
             const resp = await axios.get(`https://api.rawg.io/api/games/${idParams}?key=${API_KEY}`)
-            const {id, name,background_image, description, description_raw, released, rating, rating_top, platforms, genres} = resp.data
+            const {id, name,background_image, description_raw, released, rating, rating_top, platforms, genres} = resp.data
             newVideogame={
             id,
             name,
@@ -151,34 +106,35 @@ let getVideogameById = async (idParams)=>{
             released,
             rating: rating + '/' + rating_top,
             platforms: platforms.map(p=> p.platform.name),
-            genres:genres.map(g=> g.name)
-            }  
-            //return resp.data//newVideogame                    
-        }   
+            genres: genres.map(g=> genresArray={'id':g.id,'name':g.name})
+            }
+            //return resp.data//newVideogame
+        }
         return newVideogame
     } catch (error) {
         return {'error':error.message}
-    }  
+    }
 }
 function reportErrorPost(infoBodyGame){
-    if (!infoBodyGame.name || !infoBodyGame.description || !infoBodyGame.launch) return true 
+    if (!infoBodyGame.name || !infoBodyGame.description || !infoBodyGame.launch) return true
     return false
 }
 
 let postVideogame = async (videoGame)=>{
-    const error = reportErrorPost(videoGame)    
-    if (error) return {'error':'Faltan datos obligatorios'}    
+    const error = reportErrorPost(videoGame)
+    if (error) return {'error':'Faltan datos obligatorios'}
 
-    let{name, description, launch, rating, platformsArray, genres, background_image}=videoGame
+    let{name, description, launch, rating, platformsArray, genres, background_image} = videoGame
     let platforms = platformsArray.toString()
     try {
         const vG = await Videogame.create({
             name,description,launch,rating,background_image,platforms
         })
-        if (vG) await vG.addGenres(genres)             
+        //console.log(vG.__proto__)
+        if (vG) await vG.addGenres(genres)
         console.log(vG.id)
         return  await Videogame.findByPk(vG.id,
-            {include: 
+            {include:
                 [
                     {
                         model: Genre,
@@ -189,9 +145,9 @@ let postVideogame = async (videoGame)=>{
                  ]
             }
          )
-    } catch (error) {        
+    } catch (error) {
         return {'error':error.message}
-    }  
+    }
 }
 
 module.exports={
@@ -202,5 +158,5 @@ module.exports={
     postVideogame,
     getAllVideogames,
     getApiVideogames,
-    getDbVideogames
+    getDbVideogames,
 }

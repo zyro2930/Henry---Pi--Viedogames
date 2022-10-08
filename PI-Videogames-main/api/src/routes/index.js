@@ -8,11 +8,11 @@ const{getPlatformsForFortnite, getGenres,
 
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
+
+
 router.get("/all", async (req,res)=>{
     await getPlatformsForFortnite()//al Inicializar la ruta cargo en mi db las plataformas
-    await getGenres()//al Inicializar la ruta cargo en mi db los generos
-    const {name}=req.query
-    let result = await getAllVideogames(name)
+    let result = await getAllVideogames()
     res.json(result)
 })
 router.get("/api", async (req,res)=>{

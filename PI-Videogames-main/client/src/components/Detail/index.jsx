@@ -1,18 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getVideogameById } from "../../actions/action";
+import { getVideogameById, clearDetail } from "../../actions/action";
 import { useEffect } from "react";
 import style from './style.module.css'
 import imagenRog from '../../recursos/img/AsusRogXXL.jpg'
 
 export default function Detail (props){
+    const videogameDetails = useSelector(state=>state.detail)// aca busco ese estado global
+
     const dispatch = useDispatch()
     useEffect(()=>{
         dispatch(getVideogameById(props.match.params.id))
-    },[])
+        return ()=> dispatch(clearDetail())
+    },[dispatch])
 
-    const videogameDetails = useSelector(state=>state.detail)
     return(
         <div className={style.contenedor}>
             <div className={style.todo}>
@@ -32,10 +34,14 @@ export default function Detail (props){
 
                 <p className={style.description}>{videogameDetails.description}</p>
                 <br/>
-                <div className={style.footer}>
-                    <h4>{videogameDetails.platforms + ' '}</h4>
-                    <h4>{videogameDetails.genres + ' '}</h4>                
-                    <h4>Rating: {videogameDetails.rating}</h4>
+                <div className={style.footer}>                
+                <h4>{videogameDetails.platforms + ' '}</h4>
+                    {
+                        videogameDetails.genres?.map(element=>{
+                            return (element.name + ', ')
+                        })
+                    }               
+                <h4>Rating: {videogameDetails.rating}</h4>
                 </div>
             </div>
         </div>

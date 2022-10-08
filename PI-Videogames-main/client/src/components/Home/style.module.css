@@ -62,7 +62,6 @@ transform: scale(1.05);
 
 .buttonNew:hover{
     color: yellow;
-    font-size: 22px;
 }
 
 
@@ -76,7 +75,6 @@ transform: scale(1.05);
 
 .buttonHome:hover{
     color: yellow;
-    font-size: 22px;
 }
 
 .containerSearchBar{

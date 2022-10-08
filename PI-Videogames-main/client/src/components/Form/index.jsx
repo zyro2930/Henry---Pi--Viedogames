@@ -1,5 +1,6 @@
 import React from "react";
-import { getGenres, postVideogame, getPlatforms } from "../../actions/action";
+
+import { getGenres, postVideogame, getPlatforms,getVideogames } from "../../actions/action";
 import {useDispatch, useSelector} from'react-redux'
 import { useState } from "react";
 import { useEffect } from "react";
@@ -16,33 +17,25 @@ function validate(input){
         errors.launch = 'Debe cargar la fecha de lanzamiento del videojuego.'
     }else if (!input.rating){
         errors.rating ='El videojuego debe tener un rating inicial.'
-    }else if (input.rating>5){
+    }else if (input.rating > 5){
         errors.rating ='El valor maximo de rating permitido es 5 (cinco).'
+    }else if (input.rating < 1){
+        errors.rating = 'El valor minimo de rating permitido es 1 (uno).'
     }
     return errors
 }
 function validarFecha(fecha){
     if(validarFormatoFecha(fecha)){
-        if(!existeFecha(fecha)){
-            //alert("La fecha introducida no existe.");}
-            return false
-        }
-    }else{
-            //alert("El formato de la fecha es incorrecto." + input.launch);
-            return false
-    }  
+        if(!existeFecha(fecha))return false
+    }else return false
     return true
 }
 
 function validarFormatoFecha(campo) {
-    //esta expresion regular valida la fecha en esp y con barras
-    //var RegExPattern = /^\d{1,2}\/\d{1,2}\/\d{2,4}$/;
     var RegExPattern = /^\d{2,4}-\d{1,2}-\d{1,2}$/;
     if ((campo.match(RegExPattern)) && (campo!=='')) {
-          return true;
-    } else {
-          return false;
-    }
+          return true
+    } else return false
 }
 function existeFecha(fecha){
     var fechaf = fecha.split("/");
@@ -66,10 +59,10 @@ export default function PostVideogame (){
         name:'',
         description: '',
         launch: '',
-        rating: '',      
+        rating: '',
         platformsArray: [],
         genres:[],
-        background_image: '',   
+        background_image: '',
     })
      useEffect(()=>{
         dispatch(getPlatforms())
@@ -101,15 +94,19 @@ export default function PostVideogame (){
             alert ('Fecha invalida')
         }else if (!input.rating){
             alert('El videojuego debe tener un rating inicial.')
-        }else if (input.rating>5){
-            alert('El valor maximo de rating permitido es 5 (cinco).')
+        }else if (input.rating < 1 || input.rating > 5){
+            alert('El valor minimo es 1(uno) y el maximo es 5 (cinco).')
+        // }else if (input.rating < 1){
+        //     alert('El valor minimo de rating permitido es 1 (uno).')
         }else if (input.platformsArray.length<1){
             alert( 'Debe seleccionar al menos una plataformaaaa.',input.platformsArray.length)
         }else if (!input.genres.length){
             alert( 'Debe seleccionar al menos un genero.')
-        }else{  
+        }else{
             dispatch(postVideogame(input))
-             alert('Videojuego creado.')
+            dispatch(getVideogames());
+            alert('Videojuego creado.')
+            
             setInput({
                 name:'',
                 description: '',
@@ -118,8 +115,9 @@ export default function PostVideogame (){
                 background_image: '',
                 platforms: '',
                 platformsArray: [],
-                genres:[] 
+                genres:[]
             })
+
             history.push('/home')
         }
      }
@@ -128,10 +126,10 @@ export default function PostVideogame (){
             setInput({
                 ...input,
                 platformsArray:[...input.platformsArray, e.target.value],
-            })            
+            })
         }else{
             setInput({
-                ...input,                
+                ...input,
                 platformsArray: input.platformsArray.filter(p=> p !== e.target.value),
             })
         }
@@ -194,8 +192,8 @@ export default function PostVideogame (){
                                 {
                                     platforms.map( p=>(
                                         <label className={style.platformLbl} key={p.id}>
-                                            <input className={style.platformCheck} type={'checkbox'} 
-                                            key={p.id} name={p.name} 
+                                            <input className={style.platformCheck} type={'checkbox'}
+                                            key={p.id} name={p.name}
                                             value={p.name} onClick={e=>handleCheckPlatforms(e)}/>{p.name}
                                         </label>
                                     ))
@@ -208,19 +206,19 @@ export default function PostVideogame (){
                                 {
                                     genres.map( g=>(
                                         <label className={style.genreLbl} key={g.id}>
-                                            <input className={style.genreCheck} type={'checkbox'} 
-                                            key={g.id} name={g.name} 
+                                            <input className={style.genreCheck} type={'checkbox'}
+                                            key={g.id} name={g.name}
                                             value={g.id} onClick={e=>handleCheckGenres(e)}/>{g.name}
                                         </label>
                                     ))
-                                }    
-                            </div>                    
+                                }
+                            </div>
                         </div>
                     </div>
                     <div>
                         <label htmlFor ='imagen' className= {style.lblText} >Imagen:(no obligatorio) </label>
-                        <input id ='imagen' className= {style.txt} type={'text'} 
-                        name={'background_image'} value ={input.background_image} 
+                        <input id ='imagen' className= {style.txt} type={'text'}
+                        name={'background_image'} value ={input.background_image}
                         onChange={e=>handleChange(e)}/>
                     </div>
                     <button className={style.BtnGuardar} type="submit">Guardar</button>

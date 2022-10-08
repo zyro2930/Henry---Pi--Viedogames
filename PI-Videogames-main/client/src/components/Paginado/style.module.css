@@ -12,14 +12,21 @@
 }
 .buttons{
     background-color: rgb(45,45,48);
+    border:solid;
+    border-color: rgb(45,45,48);
+
     font-weight: bold;
     font-size:18px;
     color: goldenrod;
-    border:solid;
-    border-color: rgb(45,45,48);
     margin: 4px 4px 4px 4px;
     border-radius: 5px;
     cursor: pointer;
+}
+.buttons:disabled{
+
+    color: black;
+    border:solid;
+    border-color: rgb(45,45,48);
 }
 .buttons:hover{
     border-color: rgb(251, 251, 251);
